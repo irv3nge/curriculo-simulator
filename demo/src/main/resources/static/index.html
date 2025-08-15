@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Analista de Operações - Candidatura</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="./styles.css" rel="stylesheet">
+</head>
+<body>
+<main class="container">
+    <section class="card">
+        <h1>Analista de Operações</h1>
+        <p class="subtitle">Envie seu currículo em PDF e seus dados.</p>
+
+        <form id="form" class="grid">
+            <div class="col-2">
+                <label>Nome completo *</label>
+                <input name="nomeCompleto" required minlength="3">
+            </div>
+
+            <div class="col-2">
+                <label>E-mail *</label>
+                <input name="email" type="email" required>
+            </div>
+
+            <div>
+                <label>Celular com DDD</label>
+                <input name="celular" placeholder="+55 11 90000-0000">
+            </div>
+
+            <div>
+                <label>LinkedIn</label>
+                <input name="linkedin" placeholder="https://linkedin.com/in/seu-perfil">
+            </div>
+
+            <div>
+                <label>Pretensão salarial</label>
+                <input name="pretensaoSalarial" placeholder="R$ 0,00">
+            </div>
+
+            <div>
+                <label>Tipo de contrato</label>
+                <select name="tipoContrato">
+                    <option value="CLT" selected>CLT</option>
+                    <option value="Estagio">Estágio</option>
+                </select>
+            </div>
+
+            <div class="col-2 upload">
+                <label>Currículo (PDF) *</label>
+                <input id="pdf" name="curriculoPdf" type="file" accept="application/pdf" required>
+                <small class="hint">Máx. 10MB</small>
+            </div>
+
+            <div class="col-2 actions">
+                <button type="submit" id="btn">Enviar candidatura</button>
+                <span id="status" class="status"></span>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    const form = document.getElementById('form');
+    const btn = document.getElementById('btn');
+    const status = document.getElementById('status');
+    const pdfInput = document.getElementById('pdf');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      status.textContent = '';
+
+      const file = pdfInput.files[0];
+      if (!file || file.type !== 'application/pdf') {
+        alert('Envie um arquivo PDF.');
+        return;
+      }
+
+      const fd = new FormData(form);
+      btn.disabled = true;
+      btn.textContent = 'Enviando...';
+
+      try {
+        const resp = await fetch('/api/candidaturas', { method: 'POST', body: fd });
+        if (!resp.ok) throw new Error('Falha ao enviar');
+        await resp.json();
+        status.textContent = 'Candidatura enviada! Verifique seu e-mail.';
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        status.textContent = 'Erro ao enviar. Tente novamente.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Enviar candidatura';
+      }
+    });
+</script>
+</body>
+</html>

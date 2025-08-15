@@ -1,0 +1,50 @@
+server:
+  port: 8080
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+      location: ${user.home}/curriculos/tmp
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ""
+    password: ""
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+
+  datasource:
+    url: jdbc:h2:file:./data/curriculos-db;MODE=PostgreSQL;DATABASE_TO_UPPER=false
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.format_sql: true
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+app:
+  storage:
+
+    dir: ${user.home}/curriculos/uploads
+  email:
+    to: "seu-email@gmail.com"
+
+rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+  exchange: candidaturas.exchange
+  queue: candidaturas.queue
+  routing-key: candidaturas.rk
