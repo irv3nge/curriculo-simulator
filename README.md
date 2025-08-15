@@ -51,6 +51,18 @@ O projeto utiliza o banco <strong>H2</strong> no modo file-based, permitindo ace
   <li>Senha: (vazio)</li>
 </ul>
 
+```mermaid
+flowchart LR
+    A[Usuário no Navegador] -->|Preenche Formulário + PDF| B[Frontend HTML/CSS/JS]
+    B -->|POST /api/candidaturas| C[Spring Boot Backend]
+    C -->|Salva arquivo| D[(Pasta uploads)]
+    C -->|Persiste dados| E[(Banco H2)]
+    C -->|Publica mensagem| F[(RabbitMQ)]
+    F -->|Mensagem consumida| G[Consumer Spring Boot]
+    G -->|Envia e-mail com anexo| H[Gmail SMTP]
+    H -->|Entrega| I[Caixa de Entrada do Recrutador]
+
+
 
 
 <h2>📝 Licença</h2>
